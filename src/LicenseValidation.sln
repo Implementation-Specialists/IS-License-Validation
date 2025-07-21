@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{9D4797AA-2580-40E2-A3E0-6E24015FB4BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encryption", "Encryption\Encryption.csproj", "{0FAE16ED-9BF8-468A-96F6-0580D7D9D78E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management", "Management\Management.csproj", "{B51BCD85-5C97-4C91-8E4B-60891A3D93C3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D4797AA-2580-40E2-A3E0-6E24015FB4BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D4797AA-2580-40E2-A3E0-6E24015FB4BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D4797AA-2580-40E2-A3E0-6E24015FB4BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D4797AA-2580-40E2-A3E0-6E24015FB4BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FAE16ED-9BF8-468A-96F6-0580D7D9D78E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAE16ED-9BF8-468A-96F6-0580D7D9D78E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAE16ED-9BF8-468A-96F6-0580D7D9D78E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAE16ED-9BF8-468A-96F6-0580D7D9D78E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B51BCD85-5C97-4C91-8E4B-60891A3D93C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B51BCD85-5C97-4C91-8E4B-60891A3D93C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B51BCD85-5C97-4C91-8E4B-60891A3D93C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B51BCD85-5C97-4C91-8E4B-60891A3D93C3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D091F09D-D220-4103-A0D7-23F1F560C4FD}
+	EndGlobalSection
+EndGlobal
