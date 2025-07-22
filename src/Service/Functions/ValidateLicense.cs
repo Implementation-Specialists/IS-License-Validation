@@ -18,7 +18,7 @@ public class ValidateLicense(ILogger<ValidateLicense> logger, ILicenseManagement
     private readonly IOptionsMonitor<LicenseServiceOptions> serviceOptions = serviceOptions ?? throw new ArgumentNullException(nameof(serviceOptions));
 
     [Function("ValidateLicense")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function,
+    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous,
         "post",
         Route = "v1/validateLicense/{tenantId:minlength(36)}/{productId:minlength(36)}")] HttpRequest req,
         Guid tenantId,
@@ -26,20 +26,15 @@ public class ValidateLicense(ILogger<ValidateLicense> logger, ILicenseManagement
     {
         logger.LogInformation($"Validating license for tenant {tenantId} and product {productId}");
 
-        try
-        {
-            var validationRequest = await JsonSerializer.DeserializeAsync<LicenseValidationRequestV1>(req.Body, serializerOptions.CurrentValue);
-            licenseManagement.LicenseManager.ValidateLicense(validationRequest!.License!, tenantId, productId);
-        }
-        catch (Exception ex)
-        {
-            throw new LicenseException(LicenseErrorCode.BadRequest, "Invalid license validation request body.", ex);
-        }
+        var validationRequest = await JsonSerializer.DeserializeAsync<LicenseValidationRequestV1>(req.Body, serializerOptions.CurrentValue);
+        var isValid = licenseManagement.LicenseManager.ValidateLicense(validationRequest!.License!, tenantId, productId);
 
         var validationResponse = new LicenseValidationResponseV1()
         {
-            IsValid = true,
+            IsValid = isValid,
             NextValidationDate = DateTimeOffset.UtcNow.AddDays(this.serviceOptions.CurrentValue.NextExpirationDays),
+            ErrorCode = ErrorCode.None,
+            Message = "Valid license.",
         };
 
         logger.LogInformation($"Successfully validated license for tenant {tenantId} and product {productId}");

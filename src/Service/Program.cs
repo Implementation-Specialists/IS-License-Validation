@@ -10,7 +10,7 @@ var host = new HostBuilder()
     .ConfigureFunctionsWebApplication(builder =>
     {
         builder
-        .UseMiddleware<LicenseExceptionHandler>()
+        .UseMiddleware<LicenseManagementExceptionHandler>()
             .UseDefaultWorkerMiddleware();
     })
     .ConfigureAppConfiguration((context, builder) =>
@@ -22,7 +22,7 @@ var host = new HostBuilder()
         services
             .AddApplicationInsightsTelemetryWorkerService()
             .ConfigureFunctionsApplicationInsights()
-            .AddSingleton<LicenseExceptionHandler>()
+            .AddSingleton<LicenseManagementExceptionHandler>()
             .AddEncryption()
             .AddJsonSerializerOptions()
             .AddLicenseServiceOptions()

@@ -8,16 +8,24 @@ internal class LicenseManager(ILicenseParser licenseParser) : ILicenseManager
     {
         if (!this.licenseParser.TryParseLicense(license, out var parsedLicense))
         {
-            throw new LicenseException(LicenseErrorCode.MalformedLicense, "Failed to parse license key.");
+            throw new LicenseManagementException(LicenseManagementErrorCode.MalformedLicense, "Failed to parse license key.");
+        }
+
+        if (parsedLicense.TenantId != tenantId)
+        {
+            throw new LicenseManagementException(LicenseManagementErrorCode.BadLicense, "License is not valid for tenant.");
+        }
+
+        if (parsedLicense.Product!.Id != productId)
+        {
+            throw new LicenseManagementException(LicenseManagementErrorCode.BadLicense, "License is not valid for product.");
         }
 
         var expirationSpan = parsedLicense.ExpirationDate - DateTimeOffset.UtcNow;
 
-        if (expirationSpan <= TimeSpan.Zero
-            || parsedLicense.TenantId != tenantId
-            || parsedLicense.Product!.Id != productId)
+        if (expirationSpan <= TimeSpan.Zero)
         {
-            throw new LicenseException(LicenseErrorCode.BadLicense, "License is not valid");
+            throw new LicenseManagementException(LicenseManagementErrorCode.BadLicense, "License is expired.");
         }
 
         return true;

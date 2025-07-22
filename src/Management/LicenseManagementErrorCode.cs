@@ -2,7 +2,7 @@
 
 namespace IS.LicenseValidation.Management;
 
-public enum LicenseErrorCode
+public enum LicenseManagementErrorCode
 {
     None = 0,
     BadRequest,
