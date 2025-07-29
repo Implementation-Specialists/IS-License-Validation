@@ -1,0 +1,9 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "LicenseServiceOptions:NextExpirationDays": 1,
+    "LicenseServiceOptions:EncryptionPassword": "Implement@tion5pec1al!sts"
+  }
+}

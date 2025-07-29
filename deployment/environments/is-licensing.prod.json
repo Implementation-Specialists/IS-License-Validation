@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceName": {
+            "value": "is-licensing-prod"
+        },
+        "location": {
+            "value": "centralus"
+        },
+        "serviceSecrets": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/0a3d3beb-5a4d-47d6-9122-635c827a8c36/resourceGroups/IS-Shared/providers/Microsoft.KeyVault/vaults/is-licensing-deployment"
+                },
+                "secretName": "ProdSecrets",
+                "secretVersion": "7715d3ebc935434da49aaaea6da79b20"
+            }
+        }
+    }
+}

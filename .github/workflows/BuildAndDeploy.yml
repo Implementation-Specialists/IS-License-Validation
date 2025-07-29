@@ -1,0 +1,143 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './src'
+  BUILD_ARTIFACT_NAME: 'Licensing Service'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build Licensing Service
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+
+      - name: Setup DotNet 8.0.x Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: 'Resolve Project Dependencies Using Dotnet'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          dotnet publish --configuration Release --property:PublishDir=Output
+          popd
+
+      - name: Upload artifact for the deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: ${{ github.workspace }}/src/Service/Output
+          include-hidden-files: true  # Required for .NET projects
+
+  deploydev:
+    name: Deploy to Dev Environment
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: build
+    steps:
+    # Checkout code
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+        
+      - name: 'Download artifact from build job'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: ./downloaded-artifact
+
+      # Log into Azure
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+      - name: Deploy Service
+        uses: ./.github/actions/deployenvironment
+        with:
+          environment: dev
+          azureSubscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
+          azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
+
+  deploytie:
+    name: Deploy to TIE Environment
+    runs-on: ubuntu-latest
+    environment: tie
+    needs: deploydev
+    steps:
+    # Checkout code
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+        
+      - name: 'Download artifact from build job'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: ./downloaded-artifact
+
+      # Log into Azure
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+      - name: Deploy Service
+        uses: ./.github/actions/deployenvironment
+        with:
+          environment: tie
+          azureSubscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
+          azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
+
+  deployprod:
+    name: Deploy to PROD Environment
+    runs-on: ubuntu-latest
+    environment: prod
+    needs: deploytie
+    steps:
+    # Checkout code
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+        
+      - name: 'Download artifact from build job'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: ./downloaded-artifact
+
+      # Log into Azure
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+      - name: Deploy Service
+        uses: ./.github/actions/deployenvironment
+        with:
+          environment: prod
+          azureSubscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
+          azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
+    
