@@ -23,6 +23,7 @@ jobs:
           dotnet-version: '8.0.x'  # Change to your version
 
       - name: Restore dependencies
+        working-directory: ./src
         run: dotnet restore
 
       - name: Build
