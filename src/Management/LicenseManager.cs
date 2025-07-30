@@ -1,15 +1,20 @@
-﻿namespace IS.LicenseValidation.Management;
+﻿using IS.LicenseValidation.Management.DataContracts;
+using System.Diagnostics.CodeAnalysis;
+
+namespace IS.LicenseValidation.Management;
 
 internal class LicenseManager(ILicenseParser licenseParser) : ILicenseManager
 {
     private readonly ILicenseParser licenseParser = licenseParser ?? throw new ArgumentNullException(nameof(licenseParser));
 
-    public bool ValidateLicense(string license, Guid tenantId, Guid productId)
+    public bool ValidateLicense(string license, Guid tenantId, Guid productId, [NotNullWhen(true)] out License? outLicense)
     {
         if (!this.licenseParser.TryParseLicense(license, out var parsedLicense))
         {
             throw new LicenseManagementException(LicenseManagementErrorCode.MalformedLicense, "Failed to parse license key.");
         }
+
+        outLicense = parsedLicense;
 
         if (parsedLicense.TenantId != tenantId)
         {

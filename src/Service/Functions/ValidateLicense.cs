@@ -37,10 +37,11 @@ public class ValidateLicense(ILogger<ValidateLicense> logger, ILicenseManagement
             throw new LicenseManagementException(LicenseManagementErrorCode.BadRequest, "Invalid request body.", ex);
         }
 
-        var isValid = licenseManagement.LicenseManager.ValidateLicense(validationRequest!.License!, tenantId, productId);
+        var isValid = licenseManagement.LicenseManager.ValidateLicense(validationRequest!.License!, tenantId, productId, out var license);
 
         var validationResponse = new LicenseValidationResponseV1()
         {
+            License = license,
             IsValid = isValid,
             NextValidationDate = DateTimeOffset.UtcNow.AddDays(this.serviceOptions.CurrentValue.NextExpirationDays),
             ErrorCode = ErrorCode.None,
