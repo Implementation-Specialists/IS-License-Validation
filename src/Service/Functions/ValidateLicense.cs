@@ -43,9 +43,6 @@ public class ValidateLicense(ILogger<ValidateLicense> logger, ILicenseManagement
         {
             License = license,
             IsValid = isValid,
-            NextValidationDate = DateTimeOffset.UtcNow.AddDays(this.serviceOptions.CurrentValue.NextExpirationDays),
-            ErrorCode = ErrorCode.None,
-            Message = "Valid license.",
         };
 
         logger.LogInformation($"Successfully validated license for tenant {tenantId} and product {productId}");

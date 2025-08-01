@@ -45,7 +45,7 @@ internal class LicenseManagementExceptionHandler(ILogger<LicenseManagementExcept
 
             await response.WriteAsJsonAsync(new ErrorResponse
             {
-                ErrorCode = ErrorCode.InternalError,
+                Code = ErrorCode.InternalError,
                 Message = "An internal server error occurred."
             });
 
@@ -62,6 +62,7 @@ internal class LicenseManagementExceptionHandler(ILogger<LicenseManagementExcept
         if (request != null)
         {
             var response = request.CreateResponse();
+
             response.StatusCode = exception.ErrorCode switch
             {
                 LicenseManagementErrorCode.BadLicense => HttpStatusCode.NotFound,
@@ -70,23 +71,26 @@ internal class LicenseManagementExceptionHandler(ILogger<LicenseManagementExcept
                 _ => HttpStatusCode.InternalServerError,
             };
 
-            await response.WriteAsJsonAsync(new ErrorResponse
+            await response.WriteAsJsonAsync(new BaseResponse
             {
-                ErrorCode = exception.ErrorCode switch
+                Error = new ErrorResponse
                 {
-                    LicenseManagementErrorCode.BadLicense => ErrorCode.BadLicense,
-                    LicenseManagementErrorCode.MalformedLicense => ErrorCode.MalformedLicense,
-                    LicenseManagementErrorCode.BadRequest => ErrorCode.BadRequest,
-                    LicenseManagementErrorCode.ExpiredLicense => ErrorCode.ExpiredLicense,
-                    _ => ErrorCode.InternalError,
-                },
-                Message = exception.ErrorCode switch
-                {
-                    LicenseManagementErrorCode.MalformedLicense => "Request contained a malformed license.",
-                    LicenseManagementErrorCode.ExpiredLicense => "Expired license.",
-                    LicenseManagementErrorCode.BadLicense => "Invalid license for tenant or product.",
-                    LicenseManagementErrorCode.BadRequest => "Invalid license request.",
-                    _ => "An internal server error occurred.",
+                    Code = exception.ErrorCode switch
+                    {
+                        LicenseManagementErrorCode.BadLicense => ErrorCode.BadLicense,
+                        LicenseManagementErrorCode.MalformedLicense => ErrorCode.MalformedLicense,
+                        LicenseManagementErrorCode.BadRequest => ErrorCode.BadRequest,
+                        LicenseManagementErrorCode.ExpiredLicense => ErrorCode.ExpiredLicense,
+                        _ => ErrorCode.InternalError,
+                    },
+                    Message = exception.ErrorCode switch
+                    {
+                        LicenseManagementErrorCode.MalformedLicense => "Request contained a malformed license.",
+                        LicenseManagementErrorCode.ExpiredLicense => "Expired license.",
+                        LicenseManagementErrorCode.BadLicense => "Invalid license for tenant or product.",
+                        LicenseManagementErrorCode.BadRequest => "Invalid license request.",
+                        _ => "An internal server error occurred.",
+                    }
                 }
             });
 

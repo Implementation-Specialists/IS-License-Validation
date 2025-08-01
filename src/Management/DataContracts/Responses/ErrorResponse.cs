@@ -2,7 +2,7 @@
 
 public class ErrorResponse
 {
-    public ErrorCode ErrorCode { get; set; }
+    public ErrorCode Code { get; set; }
 
     public string Message { get; set; } = string.Empty;
 }
