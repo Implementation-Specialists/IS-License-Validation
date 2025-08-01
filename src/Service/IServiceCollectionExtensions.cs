@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using IS.LicenseValidation.Management;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -20,6 +21,14 @@ public static class IServiceCollectionExtensions
                 config.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 config.WriteIndented = true;
                 config.Converters.Add(new JsonStringEnumConverter());
+            })
+            .Configure<JsonOptions>(config =>
+            {
+                config.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                config.JsonSerializerOptions.WriteIndented = true;
+                config.JsonSerializerOptions.IncludeFields = true;
+                config.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
     }
 
