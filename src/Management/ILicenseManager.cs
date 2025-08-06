@@ -5,6 +5,6 @@ namespace IS.LicenseValidation.Management;
 
 public interface ILicenseManager
 {
-    bool ValidateLicense(string license, Guid tenantId, Guid productId, [NotNullWhen(true)] out License? outLicense);
+    License ValidateLicense(string license, Guid tenantId, Guid productId);
 
 }

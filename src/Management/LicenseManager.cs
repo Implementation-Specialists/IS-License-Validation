@@ -7,21 +7,30 @@ internal class LicenseManager(ILicenseParser licenseParser) : ILicenseManager
 {
     private readonly ILicenseParser licenseParser = licenseParser ?? throw new ArgumentNullException(nameof(licenseParser));
 
-    public bool ValidateLicense(string license, Guid tenantId, Guid productId, [NotNullWhen(true)] out License? outLicense)
+    public License ValidateLicense(string license, Guid tenantId, Guid productId)
     {
-        if (!this.licenseParser.TryParseLicense(license, out var parsedLicense))
+        License? parsedLicense;
+
+        try
         {
-            throw new LicenseManagementException(LicenseManagementErrorCode.MalformedLicense, "Failed to parse license key.");
+            if (!this.licenseParser.TryParseLicense(license, out parsedLicense))
+            {
+                throw new LicenseManagementException(LicenseManagementErrorCode.MalformedLicense, "Failed to parse license key.");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new LicenseManagementException(LicenseManagementErrorCode.MalformedLicense, "Failed to parse license key.", ex);
         }
 
-        outLicense = parsedLicense;
+        
 
         if (parsedLicense.TenantId != tenantId)
         {
             throw new LicenseManagementException(LicenseManagementErrorCode.BadLicense, "License is not valid for tenant.");
         }
 
-        if (parsedLicense.Product!.Id != productId)
+        if (parsedLicense.Product.Id != productId)
         {
             throw new LicenseManagementException(LicenseManagementErrorCode.BadLicense, "License is not valid for product.");
         }
@@ -33,6 +42,6 @@ internal class LicenseManager(ILicenseParser licenseParser) : ILicenseManager
             throw new LicenseManagementException(LicenseManagementErrorCode.ExpiredLicense, "License is expired.");
         }
 
-        return true;
+        return parsedLicense;
     }
 }
