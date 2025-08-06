@@ -43,10 +43,13 @@ internal class LicenseManagementExceptionHandler(ILogger<LicenseManagementExcept
             var response = request.CreateResponse();
             response.StatusCode = HttpStatusCode.InternalServerError;
 
-            await response.WriteAsJsonAsync(new ErrorResponse
+            await response.WriteAsJsonAsync(new BaseResponse
             {
-                Code = ErrorCode.InternalError,
-                Message = "An internal server error occurred."
+                Error = new ErrorResponse
+                {
+                    Code = ErrorCode.InternalError,
+                    Message = "An internal server error occurred."
+                }
             });
 
             context.GetInvocationResult().Value = response;
@@ -85,9 +88,9 @@ internal class LicenseManagementExceptionHandler(ILogger<LicenseManagementExcept
                     },
                     Message = exception.ErrorCode switch
                     {
-                        LicenseManagementErrorCode.MalformedLicense => "Request contained a malformed license.",
-                        LicenseManagementErrorCode.ExpiredLicense => "Expired license.",
-                        LicenseManagementErrorCode.BadLicense => "Invalid license for tenant or product.",
+                        LicenseManagementErrorCode.MalformedLicense => "Not a valid license.",
+                        LicenseManagementErrorCode.ExpiredLicense => "License is expired.",
+                        LicenseManagementErrorCode.BadLicense => "License is not valid for tenant or product.",
                         LicenseManagementErrorCode.BadRequest => "Invalid license request.",
                         _ => "An internal server error occurred.",
                     }

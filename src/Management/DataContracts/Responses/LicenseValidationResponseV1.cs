@@ -3,6 +3,4 @@
 public class LicenseValidationResponseV1 : BaseResponse
 {
     public License? License { get; set; }
-
-    public bool IsValid { get; set; }
 }
