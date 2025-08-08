@@ -7,7 +7,6 @@ public enum ErrorCode
     None = 0,
     BadRequest,
     BadLicense,
-    ExpiredLicense,
     MalformedLicense,
     InternalError,
 }

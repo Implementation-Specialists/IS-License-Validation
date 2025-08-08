@@ -35,13 +35,6 @@ internal class LicenseManager(ILicenseParser licenseParser) : ILicenseManager
             throw new LicenseManagementException(LicenseManagementErrorCode.BadLicense, "License is not valid for product.");
         }
 
-        var expirationSpan = parsedLicense.ExpirationDate - DateTimeOffset.UtcNow;
-
-        if (expirationSpan <= TimeSpan.Zero)
-        {
-            throw new LicenseManagementException(LicenseManagementErrorCode.ExpiredLicense, "License is expired.");
-        }
-
         return parsedLicense;
     }
 }

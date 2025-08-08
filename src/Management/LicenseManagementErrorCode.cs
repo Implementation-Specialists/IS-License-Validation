@@ -7,6 +7,5 @@ public enum LicenseManagementErrorCode
     None = 0,
     BadRequest,
     BadLicense,
-    ExpiredLicense,
     MalformedLicense,
 }
