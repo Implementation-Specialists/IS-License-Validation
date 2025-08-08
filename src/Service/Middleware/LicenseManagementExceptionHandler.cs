@@ -70,7 +70,7 @@ internal class LicenseManagementExceptionHandler(ILogger<LicenseManagementExcept
             {
                 LicenseManagementErrorCode.BadLicense => HttpStatusCode.NotFound,
                 LicenseManagementErrorCode.MalformedLicense => HttpStatusCode.UnprocessableContent,
-                LicenseManagementErrorCode.BadRequest or LicenseManagementErrorCode.ExpiredLicense => HttpStatusCode.BadRequest,
+                LicenseManagementErrorCode.BadRequest => HttpStatusCode.BadRequest,
                 _ => HttpStatusCode.InternalServerError,
             };
 
@@ -83,13 +83,11 @@ internal class LicenseManagementExceptionHandler(ILogger<LicenseManagementExcept
                         LicenseManagementErrorCode.BadLicense => ErrorCode.BadLicense,
                         LicenseManagementErrorCode.MalformedLicense => ErrorCode.MalformedLicense,
                         LicenseManagementErrorCode.BadRequest => ErrorCode.BadRequest,
-                        LicenseManagementErrorCode.ExpiredLicense => ErrorCode.ExpiredLicense,
                         _ => ErrorCode.InternalError,
                     },
                     Message = exception.ErrorCode switch
                     {
                         LicenseManagementErrorCode.MalformedLicense => "Not a valid license.",
-                        LicenseManagementErrorCode.ExpiredLicense => "License is expired.",
                         LicenseManagementErrorCode.BadLicense => "License is not valid for tenant or product.",
                         LicenseManagementErrorCode.BadRequest => "Invalid license request.",
                         _ => "An internal server error occurred.",
