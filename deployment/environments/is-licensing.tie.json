@@ -11,7 +11,7 @@
         "serviceSecrets": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/0a3d3beb-5a4d-47d6-9122-635c827a8c36/resourceGroups/IS-Shared/providers/Microsoft.KeyVault/vaults/is-licensing-deployment"
+                    "id": "/subscriptions/0a3d3beb-5a4d-47d6-9122-635c827a8c36/resourceGroups/Shared/providers/Microsoft.KeyVault/vaults/is-licensing-deployment"
                 },
                 "secretName": "TieSecrets",
                 "secretVersion": "f5c0df58e9ef461198bea2885d821a2f"
